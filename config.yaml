@@ -1,0 +1,83 @@
+qdrant:
+  url: http://localhost:6333
+  collection: k8s_docs
+
+providers:
+  groq:
+    base_url: https://api.groq.com/openai/v1
+    key_env: GROQ_API_KEY
+  gemini:
+    base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+    key_env: GEMINI_API_KEY
+
+llm:
+  generator:
+    provider: groq
+    model: qwen/qwen3.8-27b
+    temperature: 0
+    max_tokens: 500
+    rpm: 25
+    tpm: 7000
+    extra: {reasoning_effort: none}
+  judge:
+    provider: groq
+    model: openai/gpt-oss-120b
+    temperature: 0
+    max_tokens: 400
+    rpm: 25
+    tpm: 7000
+    extra: {reasoning_effort: low}
+
+models:
+  embedding: BAAI/bge-small-en-v1.5
+  reranker: cross-encoder/ms-marco-MiniLM-L-6-v2
+  guard: meta-llama/Llama-Prompt-Guard-2-86M
+
+corpus:
+  repo: https://github.com/kubernetes/website
+  subdir: content/en/docs
+  versions:
+    - {name: v1.30, branch: release-1.30}
+    - {name: v1.31, branch: release-1.31}
+  exclude: [reference/kubectl/generated, reference/generated, reference/kubernetes-api, reference/command-line-tools-reference, reference/config-api, contribute]
+  max_docs: 0
+
+chunking: {target_tokens: 200, max_tokens: 300}
+
+retrieval:
+  candidates: 20
+  mode: hybrid
+
+router:
+  ks: [0, 2, 5, 10]
+  min_confidence: 0.5
+  path: models/router_v2.joblib
+
+guard: {injection_threshold: 0.1}
+
+cache:
+  enabled: true
+  exact_enabled: true
+  semantic_enabled: true
+  collection: qa_cache
+  threshold: 0.88
+  min_cited_overlap: 1.0
+  use_verifier: true
+  verifier_model: cross-encoder/quora-distilroberta-base
+  verify_threshold: 0.5
+  corpus_version: k8s-v1.30-v1.31
+
+# bench:
+#   vectors_split: train
+#   vector_column: emb
+#   queries_repo: ""
+#   queries_split: test
+#   neighbors_column: ""
+#   n_queries: 1000
+#   dim: 768
+#   dir: data/bench
+
+bench:
+  n_queries: 1000
+  dim: 768
+  dir: data/bench

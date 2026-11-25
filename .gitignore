@@ -1,0 +1,47 @@
+# Local credentials and environment files
+.env
+.env.*
+!.env.example
+
+# Local documents, indexes, caches, and account data
+data/*
+!data/.gitkeep
+qdrant_storage/
+qdrant_bench_capped/
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+
+# Keep only the router artifact used by the current runtime configuration
+models/*
+!models/.gitkeep
+!models/router_v2.joblib
+
+# Raw/intermediate evaluation outputs may contain prompts or document excerpts
+results/*.json
+results/*.jsonl
+results/*.csv
+results/*.txt
+results/router_policies_v2_pre_una095_audit.md
+results/router_plot_v2_pre_una095_audit.png
+
+# Superseded development snapshots
+/config.pre-router-v2.yaml
+/Hybrid RAG Project End-to-End Progress Report.md
+/Hybrid RAG Project End-to-End Progress Report.pdf
+
+# Python and tooling
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# Editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

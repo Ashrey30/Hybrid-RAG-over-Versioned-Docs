@@ -1,0 +1,12 @@
+# Qdrant limited to 2 GB for the "capped" benchmark run (port 6335).
+# It shares the storage volume of the normal `qdrant` service: build the collection there first
+# (python -m bench.run_bench --build-only), stop `qdrant`, then start this one. Never run both at once.
+services:
+  qdrant-capped:
+    image: qdrant/qdrant:latest
+    container_name: qdrant-capped
+    mem_limit: 2g
+    ports: ["6335:6333"]
+    volumes: ["qdrant_data:/qdrant/storage"]
+volumes:
+  qdrant_data:
